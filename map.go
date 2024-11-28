@@ -8,7 +8,6 @@ import (
 var webPlugins = []l9format.WebPluginInterface{
         web.AwsCredentialsHttpPlugin{},
         web.ConfigJsonHttp{},
-        web.CodeJsonReply{},
         web.DashboardPhpInfoHttpPlugin{},
         web.DockerComposeProdHttpPlugin{},
         web.EnvAwsHttpPlugin{},
