@@ -6,32 +6,32 @@ import (
         "strings"
 )
 
-type EnvDockerComposeHttpPlugin struct {
+type EnvClassicHttpPlugin struct {
         l9format.ServicePluginBase
 }
 
-func (EnvDockerComposeHttpPlugin) GetVersion() (int, int, int) {
+func (EnvClassicHttpPlugin) GetVersion() (int, int, int) {
         return 0, 0, 2
 }
 
-func (EnvDockerComposeHttpPlugin) GetRequests() []l9format.WebPluginRequest {
+func (EnvClassicHttpPlugin) GetRequests() []l9format.WebPluginRequest {
         return []l9format.WebPluginRequest{{
                 Method:  "GET",
-                Path:    "/.env.docker-compose",
+                Path:    "/.env",
                 Headers: map[string]string{},
                 Body:    []byte(""),
         }}
 }
 
-func (EnvDockerComposeHttpPlugin) GetName() string {
-        return "EnvDockerComposeHttpPlugin"
+func (EnvClassicHttpPlugin) GetName() string {
+        return "EnvDistHttpPlugin"
 }
 
-func (EnvDockerComposeHttpPlugin) GetStage() string {
+func (EnvClassicHttpPlugin) GetStage() string {
         return "open"
 }
 
-func (plugin EnvDockerComposeHttpPlugin) Verify(request l9format.WebPluginRequest, response l9format.WebPluginResponse, event *l9format.L9Event, options map[string]string) (hasLeak bool) {
+func (plugin EnvClassicHttpPlugin) Verify(request l9format.WebPluginRequest, response l9format.WebPluginResponse, event *l9format.L9Event, options map[string]string) (hasLeak bool) {
         if !request.EqualAny(plugin.GetRequests()) || response.Response.StatusCode != 200 {
                 return false
         }
@@ -49,7 +49,7 @@ func (plugin EnvDockerComposeHttpPlugin) Verify(request l9format.WebPluginReques
                 event.Leak.Type = "config_leak"
                 event.Leak.Severity = "high"
                 event.AddTag("potential-leak")
-                event.Summary = "Found sensitive information in /.env.docker-compose:\n" + string(response.Body)
+                event.Summary = "Found sensitive information in /.env:\n" + string(response.Body)
                 return true
         }
 
